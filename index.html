@@ -186,6 +186,7 @@
     // Send message function
     document.getElementById("send").addEventListener("click", function() {
         let message = document.getElementById("message").value;
+        console.log("Sending message:", message);
         if (message.trim() !== "") {
             let messageData = {
                 text: message,
