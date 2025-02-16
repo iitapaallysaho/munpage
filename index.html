@@ -164,9 +164,10 @@
     <button id="send">Send</button>
     
     <script type="module">
-    // Import required Firebase modules
+    // Import Firebase v9 modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
     // Firebase configuration (replace with your own API keys)
     const firebaseConfig = {
         apiKey: "AIzaSyBejCzS9QOyziKT4ik5e9IqbNUafmvkD_Y",
@@ -178,28 +179,31 @@
         appId: "1:76621990023:web:492d787102c82be2ae9022",
         measurementId: "G-P9ZQJ06FLK"
     };
-    
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    
+
+    // Initialize Firebase app
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
     // Send message function
-    document.getElementById("send").addEventListener("click", function() {
+    document.getElementById("send").addEventListener("click", function () {
         let message = document.getElementById("message").value;
         console.log("Sending message:", message);
+
         if (message.trim() !== "") {
             let messageData = {
                 text: message,
                 timestamp: Date.now()
             };
+
             // Push the message to Firebase Realtime Database
-            database.ref("messages").push(messageData);
+            push(ref(database, "messages"), messageData);
+
             document.getElementById("message").value = "";
         }
     });
-    
+
     // Display messages from Firebase
-    database.ref("messages").on("child_added", function(snapshot) {
+    onChildAdded(ref(database, "messages"), (snapshot) => {
         let msg = snapshot.val().text;
         let chatBox = document.getElementById("chat-box");
         let newMessage = document.createElement("p");
@@ -207,7 +211,7 @@
         chatBox.appendChild(newMessage);
         chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
     });
-    </script>
+</script>
 
 </body>
 </html>
