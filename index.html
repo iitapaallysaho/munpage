@@ -163,10 +163,10 @@
     <input type="text" id="message" placeholder="Type a message..." />
     <button id="send">Send</button>
     
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    
-    <script>
+    <script type="module">
+    // Import required Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
     // Firebase configuration (replace with your own API keys)
     const firebaseConfig = {
         apiKey: "AIzaSyBejCzS9QOyziKT4ik5e9IqbNUafmvkD_Y",
