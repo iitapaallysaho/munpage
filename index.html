@@ -216,6 +216,26 @@
         }
     });
 
+    // Display old messages when the page loads
+    import { get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    
+    get(child(ref(database), "messages")).then((snapshot) => {
+        if (snapshot.exists()) {
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML = ""; // Clear chat box before adding messages
+    
+            snapshot.forEach((childSnapshot) => {
+                let msg = childSnapshot.val().text;
+                let newMessage = document.createElement("p");
+                newMessage.textContent = msg;
+                chatBox.appendChild(newMessage);
+            });
+    
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+        }
+    });
+    
+
     // Display messages from Firebase
     onChildAdded(ref(database, "messages"), (snapshot) => {
         let msg = snapshot.val().text;
@@ -227,7 +247,7 @@
     });
 </script>
 
-    //shabanark koodii
+    // shabanark koodii
 <script>
     const img = document.getElementById("bouncingImage");
 
