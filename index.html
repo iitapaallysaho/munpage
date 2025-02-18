@@ -215,10 +215,9 @@
             document.getElementById("message").value = "";
         }
     });
-
-    // Display old messages when the page loads
+// Display old messages when the page loads
     import { get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-    
+        
     get(child(ref(database), "messages")).then((snapshot) => {
         if (snapshot.exists()) {
             let chatBox = document.getElementById("chat-box");
@@ -247,7 +246,6 @@
     });
 </script>
 
-    // shabanark koodii
 <script>
     const img = document.getElementById("bouncingImage");
 
