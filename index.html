@@ -177,12 +177,12 @@
     <input type="text" id="message" placeholder="Type a message..." />
     <button id="send">Send</button>
     
-    <script type="module">
-    // Import Firebase v9 modules
+<script type="module">
+    // Import Firebase modules
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    import { getDatabase, ref, push, get, child, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-    // Firebase configuration (replace with your own API keys)
+    // Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyBejCzS9QOyziKT4ik5e9IqbNUafmvkD_Y",
         authDomain: "munpage7.firebaseapp.com",
@@ -194,58 +194,49 @@
         measurementId: "G-P9ZQJ06FLK"
     };
 
-    // Initialize Firebase app
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const messagesRef = ref(database, "messages");
 
-    // Send message function
-    document.getElementById("send").addEventListener("click", function () {
-        let message = document.getElementById("message").value;
-        console.log("Sending message:", message);
-
-        if (message.trim() !== "") {
-            let messageData = {
-                text: message,
-                timestamp: Date.now()
-            };
-
-            // Push the message to Firebase Realtime Database
-            push(ref(database, "messages"), messageData);
-
-            document.getElementById("message").value = "";
-        }
-    });
-// Display old messages when the page loads
-    import { get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-        
-    get(child(ref(database), "messages")).then((snapshot) => {
-        if (snapshot.exists()) {
-            let chatBox = document.getElementById("chat-box");
-            chatBox.innerHTML = ""; // Clear chat box before adding messages
-    
-            snapshot.forEach((childSnapshot) => {
-                let msg = childSnapshot.val().text;
-                let newMessage = document.createElement("p");
-                newMessage.textContent = msg;
-                chatBox.appendChild(newMessage);
-            });
-    
-            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
-        }
-    });
-    
-
-    // Display messages from Firebase
-    onChildAdded(ref(database, "messages"), (snapshot) => {
-        let msg = snapshot.val().text;
+    // Function to display messages
+    function displayMessage(msg) {
         let chatBox = document.getElementById("chat-box");
         let newMessage = document.createElement("p");
         newMessage.textContent = msg;
         chatBox.appendChild(newMessage);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-    });
-</script>
+        chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+    }
 
+    // ✅ Load old messages ONCE when the page loads
+    get(messagesRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML = ""; // Clear chat box before adding messages
+
+            snapshot.forEach((childSnapshot) => {
+                let msg = childSnapshot.val().text;
+                displayMessage(msg);
+            });
+        }
+    });
+
+    // ✅ Real-time updates (New messages)
+    onChildAdded(messagesRef, (snapshot) => {
+        let msg = snapshot.val().text;
+        displayMessage(msg);
+    });
+
+    // ✅ Send message function
+    document.getElementById("send").addEventListener("click", function () {
+        let message = document.getElementById("message").value.trim();
+        if (message !== "") {
+            push(messagesRef, { text: message, timestamp: Date.now() });
+            document.getElementById("message").value = ""; // Clear input
+        }
+    });
+
+</script>
 <script>
     const img = document.getElementById("bouncingImage");
 
