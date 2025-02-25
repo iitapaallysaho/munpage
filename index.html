@@ -51,7 +51,6 @@
     </div>
 
     <style>
-        /* Animation for glowing effect */
         @keyframes glow {
             0% {
                 text-shadow: 0px 0px 20px rgba(255, 0, 255, 0.8), 0px 0px 30px rgba(255, 0, 255, 0.6), 0px 0px 40px rgba(255, 0, 255, 0.4);
@@ -176,7 +175,9 @@
     <div class="heart">❤️</div>
     <div class="heart">❤️</div>
     <div class="heart">❤️</div>
-
+    <p style="font-size: 26px;">
+        Ei sit mitään vihapuhetta tääl!
+    </p>
     <div id="chat-box"></div>
     <input type="text" id="message" placeholder="Type a message..." />
     <button id="send">Send</button>
@@ -212,7 +213,6 @@
         chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
     }
 
-    // ✅ Load old messages ONCE when the page loads
     get(messagesRef).then((snapshot) => {
         if (snapshot.exists()) {
             let chatBox = document.getElementById("chat-box");
@@ -225,13 +225,11 @@
         }
     });
 
-    // ✅ Real-time updates (New messages)
     onChildAdded(messagesRef, (snapshot) => {
         let msg = snapshot.val().text;
         displayMessage(msg);
     });
 
-    // ✅ Send message function
     document.getElementById("send").addEventListener("click", function () {
         let message = document.getElementById("message").value.trim();
         if (message !== "") {
