@@ -80,9 +80,18 @@
     </p>
     <a href="https://www.youtube.com/watch?v=xMahZlW780E" style="font-size: 36px;">Tästä pääset kuuntelee meloo</a>
 
-    <audio autoplay loop>
+    
+    <audio id="bg-music" loop>
       <source src="Kelan jonotusmusiikki.mp3" type="audio/mpeg">
     </audio>
+    
+    <button onclick="playAudio()">Play Music</button>
+
+    <script>
+      function playAudio() {
+        document.getElementById("bg-music").play();
+      }
+    </script>
     
     <p style="font-size: 26px;">
         Täs pari kivaa kuvaa
